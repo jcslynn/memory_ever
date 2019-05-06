@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:image_picker/image_picker.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:memory_ever/screens/main/scanner/parseContent.dart';
+import 'package:memory_ever/screens/main/scanner/saveData.dart';
 import 'card_info.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -33,7 +34,9 @@ class _ScanState extends State<ScanScreen> {
 //      new HttpClient().getUrl(Uri.parse('https://'+result))
 //          .then((HttpClientRequest request) => request.close())
 //          .then((HttpClientResponse response) => response.transform(new Utf8Decoder()).listen((contents) => saveContents(contents)));
-      print(await initiate('https://'+result+'/'));
+      String data = await initiate('https://'+result+'/');
+      print(data);
+      print(await saveScannedData(data));
     } else {
       print('no matches');
     }

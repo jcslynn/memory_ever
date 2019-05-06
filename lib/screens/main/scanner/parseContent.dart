@@ -19,19 +19,23 @@ Future initiate(String url) async {
 
   List<Element> images = document.querySelectorAll('div.me-profile img');
 
-  List<Map<String, dynamic>> linkMap = [];
+  Element info = document.querySelector('div.me-story p');
+  List<Map<String, dynamic>> cardMap = [];
 
   for (int i=0; i < names.length; i++) {
     List<String> content = contents[i].text.trim().split('\n\n\n\t');
     String hometown = content[0];
     String age = content[content.length - 1];
-    linkMap.add({
+    cardMap.add({
       'name': names[i].text.trim(),
       'hometown': hometown,
       'age': age,
       'image': images[i].attributes['src'],
     });
   }
+  cardMap.add({
+    'info': info.text.trim(),
+  });
 
-  return json.encode(linkMap);
+  return json.encode(cardMap);
 }
