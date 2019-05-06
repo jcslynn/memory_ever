@@ -41,11 +41,14 @@ class IntroPage extends StatelessWidget {
 
   List<Widget> getControlButtons(BuildContext context) {
     return <Widget>[
-      this.stepNum == 1 ? Icon(Icons.arrow_back, color: Colors.transparent, size: 40.0) :
-      IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white, size: 40.0),
-        onPressed: () {Navigator.pop(context);},
-      ),
+      this.stepNum == 1
+          ? Icon(Icons.arrow_back, color: Colors.transparent, size: 40.0)
+          : IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white, size: 40.0),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
       Expanded(
           flex: 1,
           child: Text(
@@ -57,11 +60,15 @@ class IntroPage extends StatelessWidget {
               fontSize: 30.0,
             ),
           )),
-      this.stepNum == 4 ? Icon(Icons.arrow_forward, color: Colors.transparent, size: 40.0):
-      IconButton(
-        icon: Icon(Icons.arrow_forward, color: Colors.white, size: 40.0),
-        onPressed: () { Navigator.pushNamed(context, '/intro' + (this.stepNum + 1).toString());},
-      ),
+      this.stepNum == 4
+          ? Icon(Icons.arrow_forward, color: Colors.transparent, size: 40.0)
+          : IconButton(
+              icon: Icon(Icons.arrow_forward, color: Colors.white, size: 40.0),
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, '/intro' + (this.stepNum + 1).toString());
+              },
+            ),
     ];
   }
 
@@ -72,11 +79,11 @@ class IntroPage extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.black,
                 image: DecorationImage(
-                  colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.6), BlendMode.dstATop),
                   image: ExactAssetImage(getStepImageUrl()),
                   fit: BoxFit.cover,
-                )
-            ),
+                )),
             alignment: Alignment.center,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -86,13 +93,13 @@ class IntroPage extends StatelessWidget {
                     height: MediaQuery.of(context).size.width * 0.733,
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.white,
-                          width: 3.0,
-                        )
-                    ),
+                      color: Colors.white,
+                      width: 3.0,
+                    )),
                     alignment: Alignment.center,
                     child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.5),
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.5),
                         child: Text(
                           getStepText(),
                           textAlign: TextAlign.center,
@@ -102,29 +109,35 @@ class IntroPage extends StatelessWidget {
                             fontSize: 24.0,
                           ),
 //                    overflow: TextOverflow.clip,
-
-                        )
-                    )
+                        ))),
+                Padding(
+                  padding: EdgeInsets.only(top: 32.0),
                 ),
-                Padding(padding: EdgeInsets.only(top: 32.0),),
                 SizedBox(
                     width: MediaQuery.of(context).size.width * 0.733,
-                    child: Row(
-                        children: getControlButtons(context)
-                    )
-                ),
+                    child: Row(children: getControlButtons(context))),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.85,
-                  child: this.stepNum == 4 ? FlatButton(
-                      color: Colors.blue,
-                      onPressed: (){Navigator.pushNamedAndRemoveUntil(context, '/scan', ModalRoute.withName('/splash'));},
-                      child: Text('開始使用', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),)
-                  ) : null,
+                  child: this.stepNum == 4
+                      ? FlatButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/scan',
+                              ModalRoute.withName('/splash'),
+                            );
+                          },
+                          child: Text(
+                            '開始使用',
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ))
+                      : null,
                 )
               ],
-            )
-        )
-    );
+            )));
   }
 }
-

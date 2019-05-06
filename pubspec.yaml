@@ -25,6 +25,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   shared_preferences: ^0.5.2
   barcode_scan: ^1.0.0
+  qr_mobile_vision:
+  image_picker:
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:memory_ever/screens/splash.dart';
 import 'package:memory_ever/screens/intro/index.dart';
 import 'package:memory_ever/screens/main/scanner/index.dart';
