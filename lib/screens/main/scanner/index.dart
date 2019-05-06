@@ -1,9 +1,9 @@
 import 'dart:async';
-
+import 'dart:convert' show jsonDecode;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:image_picker/image_picker.dart';
+import 'package:memory_ever/screens/main/bottom_bar/bottom_bar.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:memory_ever/screens/main/scanner/parseContent.dart';
 import 'card_info.dart';
@@ -18,6 +18,10 @@ class _ScanState extends State<ScanScreen> {
 
   String barcode = '';
 
+  String url = '';
+
+  List<Map<String, dynamic>> personInfo = [];
+
   Future openImageGallery() async {
     var image = await ImagePicker.pickImage(
       source: ImageSource.gallery,
@@ -27,20 +31,29 @@ class _ScanState extends State<ScanScreen> {
   void handleScannerCallback(String result) async {
     print(result);
 
-    if (RegExp(r'^(www.memoryever.com/).*')
-        .allMatches(result)
-        .isNotEmpty) {
-//      new HttpClient().getUrl(Uri.parse('https://'+result))
-//          .then((HttpClientRequest request) => request.close())
-//          .then((HttpClientResponse response) => response.transform(new Utf8Decoder()).listen((contents) => saveContents(contents)));
-      print(await initiate('https://'+result+'/'));
+    if (RegExp(r'^(www.memoryever.com/).*').allMatches(result).isNotEmpty) {
+      var info = await initiate('https://' + result + '/');
+
+      setState(() {
+        personInfo = List.of(jsonDecode(info))
+            .map((item) => Map<String, dynamic>.of(item))
+            .toList();
+        openCardInfo = true;
+        url = result;
+      });
     } else {
       print('no matches');
     }
   }
 
-  void saveContents(contents){
+  void saveContents(contents) {
     print(contents);
+  }
+
+  void closeCardInfo() {
+    setState(() {
+      openCardInfo = false;
+    });
   }
 
   @override
@@ -125,75 +138,14 @@ class _ScanState extends State<ScanScreen> {
                   ],
                 ),
               ),
-              openCardInfo ? CardInfo() : null,
-            ].where((widget) => widget != null).toList(),
-          )
-        ],
+              BottomBar(activeRoute: '/scan'),
+            ],
+          ),
+          openCardInfo
+              ? CardInfo(info: personInfo, url: url, onClose: closeCardInfo)
+              : null,
+        ].where((widget) => widget != null).toList(),
       ),
     );
-//    return Scaffold(
-//        body: new Column(
-//      mainAxisAlignment: MainAxisAlignment.center,
-//      crossAxisAlignment: CrossAxisAlignment.stretch,
-//      children: <Widget>[
-//        Padding(
-//          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-//          child: RaisedButton(
-//            color: Colors.blue,
-//            textColor: Colors.white,
-//            splashColor: Colors.blueGrey,
-//            onPressed: scan,
-//            child: const Text('START CAMERA SCAN'),
-//          ),
-//        ),
-//        Padding(
-//          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-//          child: Text(
-//            barcode,
-//            textAlign: TextAlign.center,
-//          ),
-//        ),
-//        Container(
-//          color: Colors.white,
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            crossAxisAlignment: CrossAxisAlignment.stretch,
-//            children: <Widget>[
-//              FlatButton(
-//                onPressed: null,
-//                padding: EdgeInsets.all(0.0),
-//                child: Container(
-//                    decoration: BoxDecoration(
-//                  image: DecorationImage(
-//                    image: AssetImage('assets/isCard.png'),
-//                    fit: BoxFit.fitWidth,
-//                  ),
-//                )),
-//              ),
-//            ],
-//          ),
-//        )
-//      ],
-//    ));
   }
-
-//  Future scan() async {
-//    try {
-//      String barcode = await BarcodeScanner.scan();
-//      setState(() => this.barcode = barcode);
-//    } on PlatformException catch (e) {
-//      if (e.code == BarcodeScanner.CameraAccessDenied) {
-//        setState(() {
-//          this.barcode = 'The user did not grant the camera permission!';
-//        });
-//      } else {
-//        setState(() => this.barcode = 'Unknown error: $e');
-//      }
-//    } on FormatException {
-//      setState(() => this.barcode =
-//          'null (User returned using the "back"-button before scanning anything. Result)');
-//    } catch (e) {
-//      setState(() => this.barcode = 'Unknown error: $e');
-//    }
-//  }
 }

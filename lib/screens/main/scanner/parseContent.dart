@@ -7,10 +7,7 @@ import 'package:html/dom.dart'; // Contains DOM related classes for extracting d
 
 Future initiate(String url) async {
   var client = Client();
-//  print(url);
   Response response = await client.get(url);
-
-//  print('body: ' + response.body);
 
   // Use html parser and query selector
   var document = parse(response.body);
@@ -21,7 +18,7 @@ Future initiate(String url) async {
 
   List<Map<String, dynamic>> linkMap = [];
 
-  for (int i=0; i < names.length; i++) {
+  for (int i = 0; i < names.length; i++) {
     List<String> content = contents[i].text.trim().split('\n\n\n\t');
     String hometown = content[0];
     String age = content[content.length - 1];

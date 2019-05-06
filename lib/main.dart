@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:memory_ever/screens/splash.dart';
 import 'package:memory_ever/screens/intro/index.dart';
+import 'package:memory_ever/screens/main/scan_history/scan_history.dart';
 import 'package:memory_ever/screens/main/scanner/index.dart';
 
 void main() => runApp(MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/intro3': (BuildContext context) => new IntroPage(3),
         '/intro4': (BuildContext context) => new IntroPage(4),
         '/scan': (BuildContext context) => new ScanScreen(),
+        '/history': (_) => ScanHistory(),
       }
     );
   }
