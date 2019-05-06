@@ -27,6 +27,8 @@ dependencies:
   barcode_scan: ^1.0.0
   qr_mobile_vision:
   image_picker:
+  html: ^0.13.3+3
+  http: ^0.12.0
 
 dev_dependencies:
   flutter_test:

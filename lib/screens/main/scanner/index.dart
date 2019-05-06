@@ -1,10 +1,11 @@
 import 'dart:async';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:image_picker/image_picker.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
-
+import 'package:memory_ever/screens/main/scanner/parseContent.dart';
 import 'card_info.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -26,12 +27,20 @@ class _ScanState extends State<ScanScreen> {
   void handleScannerCallback(String result) async {
     print(result);
 
-    if (RegExp(r'^(https://www.memoryever.com/).*')
+    if (RegExp(r'^(www.memoryever.com/).*')
         .allMatches(result)
         .isNotEmpty) {
+//      new HttpClient().getUrl(Uri.parse('https://'+result))
+//          .then((HttpClientRequest request) => request.close())
+//          .then((HttpClientResponse response) => response.transform(new Utf8Decoder()).listen((contents) => saveContents(contents)));
+      print(await initiate('https://'+result+'/'));
     } else {
       print('no matches');
     }
+  }
+
+  void saveContents(contents){
+    print(contents);
   }
 
   @override
