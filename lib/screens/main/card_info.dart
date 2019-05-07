@@ -10,7 +10,7 @@ class CardInfo extends StatelessWidget {
   final Function onClose;
 
   void openUrl() {
-    launch('https://${info.url}');
+    launch(info.url);
   }
 
   @override
