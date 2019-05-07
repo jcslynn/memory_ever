@@ -27,40 +27,40 @@ class BottomBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/$iconName${isSelected ? 'Selected' : ''}.png'),
-              ),
-            ),
-          ),
-        ),
-        Row(
+    return GestureDetector(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            renderDot(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? primaryColor : Colors.grey,
-                  letterSpacing: 4,
+            Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        'assets/$iconName${isSelected ? 'Selected' : ''}.png'),
+                  ),
                 ),
-              ),
             ),
-            renderDot(),
-          ].where((widget) => widget != null).toList(),
-        )
-      ],
+            Row(
+              children: <Widget>[
+                renderDot(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: isSelected ? primaryColor : Colors.grey,
+                      letterSpacing: 4,
+                    ),
+                  ),
+                ),
+                renderDot(),
+              ].where((widget) => widget != null).toList(),
+            )
+          ],
+      )
     );
   }
 }

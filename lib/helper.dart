@@ -63,8 +63,21 @@ Future<Map<String, dynamic>> getAccessToken() {
 dynamic getHistory({AuthClient client, String url, String accessToken}) {
   var metadata = Uri.parse(url).pathSegments[0].split('-');
   print('metadata $metadata');
+
+  // Hardcode for demo
   var creationDate = metadata[0];
-  var clientName = metadata[2];
+  String clientName = metadata[2].toString();
+  int key = 0;
+  switch (clientName) {
+    case 'simonli':
+      key = 4;
+      break;
+    case 'benchau':
+      key = 5;
+      break;
+    default:
+        key = 0;
+  }
 
   return client.get('$googleApiUrl/drive/v2/files').then((response) {
     var id = List<Map<String, dynamic>>.of(jsonDecode(response.body)['items']

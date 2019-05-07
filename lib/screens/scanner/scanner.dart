@@ -106,66 +106,83 @@ class _ScanState extends State<ScanScreen> {
           Column(
             children: <Widget>[
               Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      scanned ? '請稍候' : '掃描暮誌銘二維碼',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        letterSpacing: 5,
-                      ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: scanned ? null : BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: ExactAssetImage('assets/camShadow.png'),
                     ),
-                    SizedBox(height: 20),
-                    scanned
-                        ? null
-                        : GestureDetector(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    width: 1,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              scanned ? '請稍候' : '掃描暮誌銘二維碼',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                letterSpacing: 5,
+                              ),
+                            ),
+                            SizedBox(height: 350),
+                            scanned
+                                ? Container()
+                                : GestureDetector(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      width: 1,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  '我未擁有任何暮誌銘',
+                                  style: TextStyle(
                                     color: Colors.white,
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
-                              child: Text(
-                                '我未擁有任何暮誌銘',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                ),
-                              ),
                             ),
-                          ),
-                  ].where(notNull).toList(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(25),
-                child: Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: openImageGallery,
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Icon(
-                          Icons.image,
-                          color: Colors.white,
+                          ],
                         ),
                       ),
-                    )
-                  ],
-                ),
+                      scanned ? null: Padding(
+                        padding: const EdgeInsets.all(25),
+                        child: Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: openImageGallery,
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Icon(
+                                  Icons.image,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ].where(notNull).toList(),
+                  ),
+                )
               ),
               BottomBar(activeRoute: '/scan'),
             ],

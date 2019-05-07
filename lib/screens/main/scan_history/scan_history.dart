@@ -66,6 +66,11 @@ class _ScanHistoryState extends State<ScanHistory> {
                         image: ExactAssetImage('assets/bgSky2.png'),
                       ),
                       borderRadius: BorderRadius.circular(20),
+                      boxShadow: [ BoxShadow(
+                        color: Color.fromRGBO(0, 101, 190, 0.16),
+                        offset: Offset(0,12),
+                        blurRadius: 12
+                      ) ]
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -112,7 +117,7 @@ class _ScanHistoryState extends State<ScanHistory> {
             ),
           ),
           Text(
-            person.getAge(),
+            person.age,
             style: TextStyle(
               fontSize: 15,
               letterSpacing: 3,
@@ -144,7 +149,7 @@ class _ScanHistoryState extends State<ScanHistory> {
             Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(25),
+                  padding: EdgeInsets.only(top: 25, right: 25, left: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -181,7 +186,7 @@ class _ScanHistoryState extends State<ScanHistory> {
                             child: CircularProgressIndicator(),
                           )
                         : CarouselSlider(
-                            height: 600,
+                            height: 480,
                             enlargeCenterPage: true,
                             enableInfiniteScroll: false,
                             autoPlay: false,
