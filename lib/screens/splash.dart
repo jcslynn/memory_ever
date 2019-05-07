@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_ever/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -8,8 +9,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashState extends State<SplashScreen> {
   Future checkFirstSeen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _seen = (prefs.getBool('seen') ?? false);
+    var prefs = await SharedPreferences.getInstance();
+    var _seen = (prefs.getBool('seen') ?? false);
 
     if (_seen) {
       Navigator.pushReplacementNamed(context, '/scan');
@@ -18,7 +19,6 @@ class _SplashState extends State<SplashScreen> {
       Navigator.pushReplacementNamed(context, '/intro1');
     }
   }
-
 
   @override
   void initState() {
@@ -31,12 +31,12 @@ class _SplashState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
 //        color: Colors.black,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/group227.png'),
-                  fit: BoxFit.cover,
-              ),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/group227.png'),
+            fit: BoxFit.cover,
           ),
+        ),
         child: Center(
           child: Container(
             decoration: BoxDecoration(
@@ -48,7 +48,7 @@ class _SplashState extends State<SplashScreen> {
             width: MediaQuery.of(context).size.width * 0.56,
           ),
         ),
-        ),
+      ),
     );
   }
 }
