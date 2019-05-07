@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_ever/classes/person/person.dart';
 import 'package:memory_ever/classes/history/history.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,6 +13,51 @@ class CardInfo extends StatelessWidget {
   void openUrl() {
     launch(info.url);
   }
+
+  Column renderPerson(Person person) => Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: <Widget>[
+      Container(
+        height: 240,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.white,
+            width: 5,
+          ),
+        ),
+        child: Image.network(
+          person.imageUrl,
+          semanticLabel: '${person.name} 的遺照',
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 15),
+        child: Text(
+          person.name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            letterSpacing: 5,
+          ),
+        ),
+      ),
+      Text(
+        person.getHometown(),
+        style: TextStyle(
+          fontSize: 15,
+          letterSpacing: 3,
+        ),
+      ),
+      Text(
+        person.age,
+        style: TextStyle(
+          fontSize: 15,
+          letterSpacing: 3,
+        ),
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -54,50 +100,7 @@ class CardInfo extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: info.people
-                      .map((person) => Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                height: 240,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 5,
-                                  ),
-                                ),
-                                child: Image.network(
-                                  person.imageUrl,
-                                  semanticLabel: '${person.name} 的遺照',
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: Text(
-                                  person.name,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    letterSpacing: 5,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                person.getHometown(),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  letterSpacing: 3,
-                                ),
-                              ),
-                              Text(
-                                person.age,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  letterSpacing: 3,
-                                ),
-                              ),
-                            ],
-                          ))
+                      .map(renderPerson)
                       .toList(),
                 ),
               ],

@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:convert' show jsonEncode;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:image_picker/image_picker.dart';
-import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:memory_ever/classes/history/history.dart';
 import 'package:memory_ever/screens/main/bottom_bar/bottom_bar.dart';
-import 'package:memory_ever/screens/main/scanner/parse_content.dart';
-import 'package:memory_ever/screens/main/scanner/save_data.dart';
 import 'package:memory_ever/screens/main/card_info.dart';
+import 'package:qr_mobile_vision/qr_camera.dart';
+
+import 'parse_content.dart';
+import 'save_data.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -34,6 +36,8 @@ class _ScanState extends State<ScanScreen> {
     print(result);
 
     if (RegExp(r'^(www.memoryever.com/).*').allMatches(result).isNotEmpty) {
+      HapticFeedback.vibrate();
+
       var scannedHistory = await initiate('https://' + result + '/');
       if (scannedHistory != null)
         await saveScannedData(jsonEncode(scannedHistory));
@@ -43,8 +47,6 @@ class _ScanState extends State<ScanScreen> {
         openCardInfo = true;
         url = result;
       });
-    } else {
-      print('no matches');
     }
   }
 
@@ -56,11 +58,6 @@ class _ScanState extends State<ScanScreen> {
     setState(() {
       openCardInfo = false;
     });
-  }
-
-  @override
-  initState() {
-    super.initState();
   }
 
   @override

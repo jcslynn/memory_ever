@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:memory_ever/screens/splash.dart';
-import 'package:memory_ever/screens/intro/index.dart';
+import 'package:memory_ever/screens/intro.dart';
 import 'package:memory_ever/screens/main/scan_history/scan_history.dart';
-import 'package:memory_ever/screens/main/scanner/scanner.dart';
+import 'package:memory_ever/screens/scanner/scanner.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,15 +16,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new SplashScreen(),
+      home: SplashScreen(),
 //      initialRoute: '/splash',
       routes: {
-        '/splash': (BuildContext context) => new SplashScreen(),
-        '/intro1': (BuildContext context) => new IntroPage(1),
-        '/intro2': (BuildContext context) => new IntroPage(2),
-        '/intro3': (BuildContext context) => new IntroPage(3),
-        '/intro4': (BuildContext context) => new IntroPage(4),
-        '/scan': (BuildContext context) => new ScanScreen(),
+        '/splash': (BuildContext context) => SplashScreen(),
+        '/intro1': (BuildContext context) => IntroPage(1),
+        '/intro2': (BuildContext context) => IntroPage(2),
+        '/intro3': (BuildContext context) => IntroPage(3),
+        '/intro4': (BuildContext context) => IntroPage(4),
+        '/scan': (BuildContext context) => ScanScreen(),
         '/history': (_) => ScanHistory(),
       }
     );

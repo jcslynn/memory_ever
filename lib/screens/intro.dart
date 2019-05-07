@@ -39,38 +39,37 @@ class IntroPage extends StatelessWidget {
     }
   }
 
-  List<Widget> getControlButtons(BuildContext context) {
-    return <Widget>[
-      this.stepNum == 1
-          ? Icon(Icons.arrow_back, color: Colors.transparent, size: 40.0)
-          : IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white, size: 40.0),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-      Expanded(
-          flex: 1,
-          child: Text(
-            getStepNum(),
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 30.0,
-            ),
-          )),
-      this.stepNum == 4
-          ? Icon(Icons.arrow_forward, color: Colors.transparent, size: 40.0)
-          : IconButton(
-              icon: Icon(Icons.arrow_forward, color: Colors.white, size: 40.0),
-              onPressed: () {
-                Navigator.pushNamed(
-                    context, '/intro' + (this.stepNum + 1).toString());
-              },
-            ),
-    ];
-  }
+  List<Widget> getControlButtons(BuildContext context) => <Widget>[
+        this.stepNum == 1
+            ? Icon(Icons.arrow_back, color: Colors.transparent, size: 40.0)
+            : IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white, size: 40.0),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+        Expanded(
+            flex: 1,
+            child: Text(
+              getStepNum(),
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 30.0,
+              ),
+            )),
+        this.stepNum == 4
+            ? Icon(Icons.arrow_forward, color: Colors.transparent, size: 40.0,)
+            : IconButton(
+                icon:
+                    Icon(Icons.arrow_forward, color: Colors.white, size: 40.0),
+                onPressed: () {
+                  Navigator.pushNamed(
+                      context, '/intro' + (this.stepNum + 1).toString());
+                },
+              ),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +109,7 @@ class IntroPage extends StatelessWidget {
                           ),
 //                    overflow: TextOverflow.clip,
                         ))),
-                Padding(
-                  padding: EdgeInsets.only(top: 32.0),
-                ),
+                SizedBox(height: 32),
                 SizedBox(
                     width: MediaQuery.of(context).size.width * 0.733,
                     child: Row(children: getControlButtons(context))),

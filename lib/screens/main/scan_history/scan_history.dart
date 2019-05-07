@@ -121,6 +121,13 @@ class _ScanHistoryState extends State<ScanHistory> {
         ],
       );
 
+  CardInfo renderCardInfo() => showCardInfo
+      ? CardInfo(
+          info: selectedHistory,
+          onClose: closeCardInfo,
+        )
+      : null;
+
   @override
   void initState() {
     super.initState();
@@ -185,12 +192,7 @@ class _ScanHistoryState extends State<ScanHistory> {
                 BottomBar(activeRoute: '/history'),
               ],
             ),
-            showCardInfo
-                ? CardInfo(
-                    info: selectedHistory,
-                    onClose: closeCardInfo,
-                  )
-                : null,
+            renderCardInfo(),
           ].where((widget) => widget != null).toList(),
         ),
       ),
