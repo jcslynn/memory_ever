@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:memory_ever/classes/history/history.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CardInfo extends StatelessWidget {
-  const CardInfo({this.info, this.onClose, this.url});
+  const CardInfo({this.info, this.onClose});
 
-  final List<Map<String, dynamic>> info;
+  final History info;
 
   final Function onClose;
 
-  final String url;
-
   void openUrl() {
-    launch('https://$url');
+    launch('https://${info.url}');
   }
 
   @override
@@ -54,13 +53,13 @@ class CardInfo extends StatelessWidget {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: info
-                      .map((item) => Column(
+                  children: info.people
+                      .map((person) => Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                height: 100,
+                                height: 240,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.white,
@@ -68,14 +67,14 @@ class CardInfo extends StatelessWidget {
                                   ),
                                 ),
                                 child: Image.network(
-                                  item['image'],
-                                  semanticLabel: '${item['name']} 的遺照',
+                                  person.imageUrl,
+                                  semanticLabel: '${person.name} 的遺照',
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 15),
                                 child: Text(
-                                  item['name'],
+                                  person.name,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -84,14 +83,14 @@ class CardInfo extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                item['hometown'].split('：')[1],
+                                person.getHometown(),
                                 style: TextStyle(
                                   fontSize: 15,
                                   letterSpacing: 3,
                                 ),
                               ),
                               Text(
-                                item['age'],
+                                person.age,
                                 style: TextStyle(
                                   fontSize: 15,
                                   letterSpacing: 3,
@@ -111,7 +110,7 @@ class CardInfo extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text(
-                '他們於1944年在香港離島長洲結婚，婚後育有兩名兒子周炳全、周炳篡，壹名女兒周...',
+                info.description,
                 style: TextStyle(
                   fontSize: 15,
                 ),

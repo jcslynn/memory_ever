@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_ever/screens/splash.dart';
 import 'package:memory_ever/screens/intro/index.dart';
 import 'package:memory_ever/screens/main/scan_history/scan_history.dart';
-import 'package:memory_ever/screens/main/scanner/index.dart';
+import 'package:memory_ever/screens/main/scanner/scanner.dart';
 
 void main() => runApp(MyApp());
 

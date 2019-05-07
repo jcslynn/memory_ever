@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'dart:convert' show jsonDecode;
+import 'dart:convert' show jsonEncode;
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:memory_ever/screens/main/bottom_bar/bottom_bar.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
-import 'package:memory_ever/screens/main/scanner/parseContent.dart';
-import 'card_info.dart';
+import 'package:memory_ever/classes/history/history.dart';
+import 'package:memory_ever/screens/main/bottom_bar/bottom_bar.dart';
+import 'package:memory_ever/screens/main/scanner/parse_content.dart';
+import 'package:memory_ever/screens/main/scanner/save_data.dart';
+import 'package:memory_ever/screens/main/card_info.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -20,7 +22,7 @@ class _ScanState extends State<ScanScreen> {
 
   String url = '';
 
-  List<Map<String, dynamic>> personInfo = [];
+  History history;
 
   Future openImageGallery() async {
     var image = await ImagePicker.pickImage(
@@ -32,12 +34,12 @@ class _ScanState extends State<ScanScreen> {
     print(result);
 
     if (RegExp(r'^(www.memoryever.com/).*').allMatches(result).isNotEmpty) {
-      var info = await initiate('https://' + result + '/');
+      var scannedHistory = await initiate('https://' + result + '/');
+      if (scannedHistory != null)
+        await saveScannedData(jsonEncode(scannedHistory));
 
       setState(() {
-        personInfo = List.of(jsonDecode(info))
-            .map((item) => Map<String, dynamic>.of(item))
-            .toList();
+        history = scannedHistory;
         openCardInfo = true;
         url = result;
       });
@@ -141,9 +143,7 @@ class _ScanState extends State<ScanScreen> {
               BottomBar(activeRoute: '/scan'),
             ],
           ),
-          openCardInfo
-              ? CardInfo(info: personInfo, url: url, onClose: closeCardInfo)
-              : null,
+          openCardInfo ? CardInfo(info: history, onClose: closeCardInfo) : null,
         ].where((widget) => widget != null).toList(),
       ),
     );
