@@ -110,9 +110,9 @@ class CardInfo extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text(
-                info.description,
+                info.getTrimmedDescription(),
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 18,
                 ),
               ),
               SizedBox(height: 25),
@@ -123,8 +123,8 @@ class CardInfo extends StatelessWidget {
                     color: Colors.white,
                     gradient: LinearGradient(
                       colors: <Color>[
-                        Color(0xFF00E2FF),
                         Color(0xFF0259FF),
+                        Color(0xFF00E2FF),
                       ],
                     ),
                   ),
@@ -136,6 +136,7 @@ class CardInfo extends StatelessWidget {
                         '進入先人暮誌銘',
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 20,
                           letterSpacing: 4,
                         ),
                       ),

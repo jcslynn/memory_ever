@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_ever/classes/history/history.dart';
 import 'package:memory_ever/classes/person/person.dart';
+import 'package:memory_ever/constants.dart';
 import 'package:memory_ever/screens/main/bottom_bar/bottom_bar.dart';
 import 'package:memory_ever/screens/main/card_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,6 +42,10 @@ class _ScanHistoryState extends State<ScanHistory> {
     setState(() {
       showCardInfo = false;
     });
+  }
+
+  void openScanner(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed('/scan');
   }
 
   List<Builder> renderCards() => histories
@@ -132,22 +137,25 @@ class _ScanHistoryState extends State<ScanHistory> {
             Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         '掃描歷史',
                         style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 25,
+                          color: primaryColor,
+                          fontSize: 30,
                           letterSpacing: 5,
                         ),
                       ),
                       GestureDetector(
+                        onTap: () {
+                          openScanner(context);
+                        },
                         child: Container(
                           padding: EdgeInsets.all(5),
-                          color: Colors.blue,
+                          color: primaryColor,
                           child: Icon(
                             Icons.add,
                             color: Colors.white,

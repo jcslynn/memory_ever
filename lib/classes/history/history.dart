@@ -21,4 +21,8 @@ class History {
       _$HistoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryToJson(this);
+
+  String getTrimmedDescription() => description.length > 40
+      ? '${description.substring(0, 40)}...'
+      : description;
 }

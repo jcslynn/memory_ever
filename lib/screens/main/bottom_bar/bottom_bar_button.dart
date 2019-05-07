@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_ever/constants.dart';
 
 class BottomBarButton extends StatelessWidget {
   const BottomBarButton({
@@ -20,7 +21,7 @@ class BottomBarButton extends StatelessWidget {
       ? Container(
           height: 5,
           width: 5,
-          color: Colors.blue,
+          color: primaryColor,
         )
       : null;
 
@@ -51,8 +52,8 @@ class BottomBarButton extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? Colors.blue : Colors.grey,
-                  letterSpacing: 5,
+                  color: isSelected ? primaryColor : Colors.grey,
+                  letterSpacing: 4,
                 ),
               ),
             ),
