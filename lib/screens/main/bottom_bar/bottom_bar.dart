@@ -8,7 +8,7 @@ class BottomBar extends StatelessWidget {
   final String activeRoute;
 
   void switchPage({BuildContext context, String route}) {
-    Navigator.of(context).pushReplacementNamed(route);
+    if (route != activeRoute) Navigator.of(context).pushReplacementNamed(route);
   }
 
   @override

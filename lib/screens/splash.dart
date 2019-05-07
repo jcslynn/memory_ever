@@ -12,10 +12,10 @@ class _SplashState extends State<SplashScreen> {
     bool _seen = (prefs.getBool('seen') ?? false);
 
     if (_seen) {
-      Navigator.pushNamed(context, '/scan');
+      Navigator.pushReplacementNamed(context, '/scan');
     } else {
       prefs.setBool('seen', true);
-      Navigator.pushNamed(context, '/intro1');
+      Navigator.pushReplacementNamed(context, '/intro1');
     }
   }
 
