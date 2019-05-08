@@ -57,7 +57,7 @@ class _ScanState extends State<ScanScreen> {
         httpClient = authenticatedClient;
       });
 
-      await getHistory(
+      history = await getHistory(
         client: httpClient,
         url: 'https://$result/',
       );
