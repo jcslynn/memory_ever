@@ -96,7 +96,7 @@ dynamic getHistory({AuthClient client, String url, String accessToken}) async {
   print('apiKey $apiKey');
   Response spreadsheetResponse = await Http.get(
       '$googleSheetsApiUrl/v4/spreadsheets/$id/values/Form responses 1!A$key:AK$key?key=$apiKey');
-  Map values = jsonDecode(spreadsheetResponse.body)['values'][0];
+  var values = jsonDecode(spreadsheetResponse.body)['values'][0];
   print('values $values');
 
   // parse data
