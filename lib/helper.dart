@@ -69,10 +69,10 @@ dynamic getHistory({AuthClient client, String url, String accessToken}) {
   String clientName = metadata[2].toString();
   int key = 0;
   switch (clientName) {
-    case 'simonli':
+    case 'benchau':
       key = 4;
       break;
-    case 'benchau':
+    case 'simonli':
       key = 5;
       break;
     default:
@@ -86,7 +86,7 @@ dynamic getHistory({AuthClient client, String url, String accessToken}) {
             file['title'] ==
             'Memory Ever Service Limited - 申請服務 (Responses)')['id'];
     print('id $id');
-    return Http.get('$googleSheetsApiUrl/v4/spreadsheets/$id?key=$apiKey');
+    return Http.get('$googleSheetsApiUrl/v4/spreadsheets/$id?key=$apiKey/values/\'Form responses 1\'!$key');
   }).then((response) {
     print(response.body);
   });
