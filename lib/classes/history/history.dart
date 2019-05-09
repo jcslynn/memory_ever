@@ -10,12 +10,14 @@ class History {
     this.description,
     this.url,
     this.age,
+    this.theme,
   });
 
   final List<Person> people;
   final String description;
   final String url;
   final String age;
+  final String theme;
 
   factory History.fromJson(Map<String, dynamic> json) =>
       _$HistoryFromJson(json);

@@ -1,70 +1,21 @@
 import 'dart:convert' show base64Encode, jsonDecode, jsonEncode, utf8;
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
 import 'package:crypto/crypto.dart' show Hmac, sha256;
 import 'package:googleapis_auth/auth.dart';
 import 'package:http/http.dart' as Http;
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'classes/history/history.dart';
 import 'classes/person/person.dart';
-import 'constants.dart' show apiKey, client, googleApiUrl, googleSheetsApiUrl;
-
-String _createJwt() {
-  var currentTime = DateTime.now();
-  var header = jsonEncode({'alg': 'RS256', 'typ': 'JWT'});
-  var headerEncoded = base64Encode(
-    utf8.encode(header),
-  );
-  var claim = jsonEncode({
-    'iss': client['client_email'],
-    'scope': 'https://www.googleapis.com/auth/spreadsheets.readonly',
-    'aud': 'https://www.googleapis.com/oauth2/v4/token',
-    'exp': (currentTime.add(Duration(hours: 1)).millisecondsSinceEpoch / 1000)
-        .round(),
-    'iat': (currentTime.millisecondsSinceEpoch / 1000).round(),
-  });
-  var claimEncoded = base64Encode(
-    utf8.encode(claim),
-  );
-  var rs256encrypt = Hmac(sha256, utf8.encode(client['private_key']));
-  var signatureEncoded = base64Encode(
-    rs256encrypt.convert(utf8.encode('$headerEncoded.$claimEncoded')).bytes,
-  );
-
-  return '$headerEncoded.$claimEncoded.$signatureEncoded}';
-}
+import 'constants.dart' show apiKey, googleApiUrl, googleSheetsApiUrl;
 
 bool notNull(item) => item != null;
 
-Future<Map<String, dynamic>> getAccessToken() {
-  print('test');
-
-  return Http.post(
-    '$googleApiUrl/oauth2/v4/token',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: Uri(
-      queryParameters: {
-        'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-        'assertion': _createJwt(),
-      },
-    ).toString().substring(1),
-  ).then((response) {
-    var decodedResponse = Map<String, dynamic>.of(jsonDecode(response.body));
-
-    if (decodedResponse['error'] != null) {
-      throw Exception(response.body);
-    }
-
-    return decodedResponse
-      ..addAll({'time_added': DateTime.now().millisecondsSinceEpoch});
-  });
-}
-
-dynamic getHistory({AuthClient client, String url, String accessToken}) async {
+Future<History> getHistory(
+    {AuthClient client, String url, String accessToken}) async {
+  print('segments ${Uri.parse(url).pathSegments}');
   var metadata = Uri.parse(url).pathSegments[0].split('-');
   print('metadata $metadata');
 
@@ -74,10 +25,10 @@ dynamic getHistory({AuthClient client, String url, String accessToken}) async {
     String clientName = metadata[2].toString();
     switch (clientName) {
       case 'benchau':
-        key = 5;
+        key = 3;
         break;
       case 'simonli':
-        key = 4;
+        key = 2;
         break;
       default:
         key = 0;
@@ -92,54 +43,97 @@ dynamic getHistory({AuthClient client, String url, String accessToken}) async {
       .map<Map<String, dynamic>>(
           (item) => Map<String, dynamic>.of(item))).firstWhere((file) =>
       file['title'] == 'Memory Ever Service Limited - 申請服務 (Responses)')['id'];
+
   print('id $id');
-  print('apiKey $apiKey');
-  Response spreadsheetResponse = await Http.get(
-      '$googleSheetsApiUrl/v4/spreadsheets/$id/values/Form responses 1!A$key:AK$key?key=$apiKey');
+
+  var spreadsheetResponse = await Http.get(
+      '$googleSheetsApiUrl/v4/spreadsheets/$id/values/Form responses 1!A$key:AZ$key?key=$apiKey');
+
+  print('spreadsheet body ${spreadsheetResponse.body}');
   var values = jsonDecode(spreadsheetResponse.body)['values'][0];
+
+  print('spreadsheet response ${spreadsheetResponse.body}');
   print('values $values');
 
   // parse data
-  DateFormat format = new DateFormat('dd/MM/yyyy');
-  List<Person> people = new List();
+  var people = <Person>[];
 
-  String hometown = values[26];
-  String description = values[27];
-  List<String> images = values[28].split(',');
-  String bless = values[29];
-  String finalSay = values[30];
+//  String hometown = values[35];
+  String description = values[35];
+  String theme = values[6];
+
   if (values[7] == '一位') {
-    String name = values[20];
-    String image = values[21];
-    DateTime birthDate = format.parse(values[22]);
-    String birthTime = values[23];
-    DateTime deathDate = format.parse(values[24]);
-    String deathTime = values[25];
-    int age = deathDate.year - birthDate.year;
+    // values[7] specifies numbers of people
+    String name = values[26];
+    String hometown = values[29];
+    String age = values[27];
+    String imageId = Uri.parse(values[30]).queryParameters['id'];
 
-    Person p = new Person(hometown: hometown, name: name, imageUrl: image, age: age.toString());
+    var imageContentResponse = await client.get(
+      '$googleApiUrl/drive/v3/files/$imageId?alt=media&key=$apiKey',
+    );
+
+    print('response body ${imageContentResponse.body}');
+
+    Person p = Person(
+      hometown: hometown,
+      name: name,
+      imageUrl: base64Encode(imageContentResponse.bodyBytes),
+      age: age,
+    );
     people.add(p);
   } else {
     String name = values[8];
-    String image = values[9];
-    DateTime birthDate = format.parse(values[10]);
-    String birthTime = values[11];
-    DateTime deathDate = format.parse(values[12]);
-    String deathTime = values[13];
-    int age = deathDate.year - birthDate.year;
+    String hometown = values[11];
+    String age = values[9];
+    String imageId = Uri.parse(values[12]).queryParameters['id'];
 
-    String name2 = values[14];
-    String image2 = values[15];
-    DateTime birthDate2 = format.parse(values[16]);
-    String birthTime2 = values[17];
-    DateTime deathDate2 = format.parse(values[18]);
-    String deathTime2 = values[19];
-    int age2 = deathDate2.year - birthDate2.year;
+    print('imageid $imageId');
 
-    Person p1 = new Person(hometown: hometown, name: name, imageUrl: image, age: age.toString());
-    Person p2 = new Person(hometown: hometown, name: name2, imageUrl: image2, age: age2.toString());
+    String name2 = values[17];
+    String hometown2 = values[20];
+    String age2 = values[18];
+    String image2Id = Uri.parse(values[21]).queryParameters['id'];
+
+    var imageContentResponse = await Future.wait([
+      client.get('$googleApiUrl/drive/v3/files/$imageId?alt=media&key=$apiKey'),
+      client
+          .get('$googleApiUrl/drive/v3/files/$image2Id?alt=media&key=$apiKey'),
+    ]);
+
+    print('imagecontentresponse body ${imageContentResponse[0].body}');
+
+    Person p1 = Person(
+      hometown: hometown,
+      name: name,
+      imageBase64: base64Encode(imageContentResponse[0].bodyBytes),
+      age: age,
+    );
+    Person p2 = Person(
+      hometown: hometown2,
+      name: name2,
+      imageBase64: base64Encode(imageContentResponse[1].bodyBytes),
+      age: age2,
+    );
     people.add(p1);
     people.add(p2);
   }
-  return new History(people: people, description: description, url: url);
+
+  return History(
+    people: people,
+    description: description,
+    url: url,
+    theme: theme,
+  );
+}
+
+Future<bool> saveHistory(History history) async {
+  var prefs = await SharedPreferences.getInstance();
+  var historyJson = jsonEncode(history);
+
+  return prefs.setStringList(
+    'history',
+    Set.of((prefs.getStringList('history') ?? <String>[])..add(historyJson))
+        .toList(),
+  );
 }

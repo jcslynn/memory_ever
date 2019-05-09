@@ -9,20 +9,16 @@ class Person {
     this.hometown,
     this.age,
     this.imageUrl,
+    this.imageBase64,
   });
 
   final String name;
   final String hometown;
   final String imageUrl;
+  final String imageBase64;
   final String age;
 
   factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);
 
   Map<String, dynamic> toJson() => _$PersonToJson(this);
-
-  String getHometown() => hometown.split('：')[1];
-
-  String getAge() => age.split('：')[1];
-
-  // those two methods should be temporary
 }

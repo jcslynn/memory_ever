@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert' show base64Decode, jsonDecode;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,8 @@ class ScanHistory extends StatefulWidget {
 }
 
 class _ScanHistoryState extends State<ScanHistory> {
+  bool isLoading = true;
+
   bool showCardInfo = false;
 
   History selectedHistory;
@@ -24,18 +26,26 @@ class _ScanHistoryState extends State<ScanHistory> {
   String selectedUrl = '';
 
   void fetchHistoryFromStorage() async {
-    var prefs = await SharedPreferences.getInstance();
-    print('history ${prefs.getStringList('history')}');
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      var historyList = prefs.getStringList('history') ?? [];
 
-    setState(() {
-      histories = prefs
-          .getStringList('history')
-          .where((item) => item != 'null')
-          .map(
-            (string) => History.fromJson(jsonDecode(string)),
-          )
-          .toList();
-    });
+      setState(() {
+        isLoading = false;
+        histories = historyList.isNotEmpty
+            ? historyList
+            .where((item) => item != 'null')
+            .map(
+              (string) => History.fromJson(jsonDecode(string)),
+        )
+            .toList()
+            : [];
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void closeCardInfo() {
@@ -61,17 +71,17 @@ class _ScanHistoryState extends State<ScanHistory> {
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: ExactAssetImage('assets/bgSky2.png'),
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [ BoxShadow(
-                        color: Color.fromRGBO(0, 101, 190, 0.16),
-                        offset: Offset(0,12),
-                        blurRadius: 12
-                      ) ]
-                    ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: ExactAssetImage('assets/bgSky2.png'),
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 101, 190, 0.16),
+                              offset: Offset(0, 12),
+                              blurRadius: 12)
+                        ]),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: history.people.map(renderPerson).toList(),
@@ -93,9 +103,12 @@ class _ScanHistoryState extends State<ScanHistory> {
                 width: 5,
               ),
             ),
-            child: Image.network(
-              person.imageUrl,
+            child: Image.memory(
+              base64Decode(person.imageBase64),
               semanticLabel: '${person.name} 的遺照',
+              height: 250,
+              width: 120,
+              fit: BoxFit.cover,
             ),
           ),
           Padding(
@@ -110,14 +123,14 @@ class _ScanHistoryState extends State<ScanHistory> {
             ),
           ),
           Text(
-            person.getHometown(),
+            person.hometown,
             style: TextStyle(
               fontSize: 15,
               letterSpacing: 3,
             ),
           ),
           Text(
-            person.age,
+            person.age.toString(),
             style: TextStyle(
               fontSize: 15,
               letterSpacing: 3,
@@ -179,7 +192,7 @@ class _ScanHistoryState extends State<ScanHistory> {
                 ),
                 Expanded(
                   child: Center(
-                    child: histories.isEmpty
+                  child: histories.isEmpty && isLoading
                         ? SizedBox(
                             height: 50,
                             width: 50,

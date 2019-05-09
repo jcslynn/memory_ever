@@ -35,32 +35,54 @@ class _ScanState extends State<ScanScreen> {
     );
   }
 
-  void handleScannerCallback(String result) async {
+  void handleScannerCallback(String result, BuildContext context) async {
     print(result);
 
-    if (RegExp(r'^(www.memoryever.com/).*').allMatches(result).isNotEmpty) {
-      setState(() {
-        scanned = true;
-      });
+    if (RegExp(r'.*www.memoryever.com.*').allMatches(result).isNotEmpty && !scanned) {
+      try {
+        setState(() {
+          scanned = true;
+        });
 
-      HapticFeedback.vibrate();
+        HapticFeedback.vibrate();
 
-      var credentials = ServiceAccountCredentials.fromJson(client);
-      var scopes = <String>[
-        'https://www.googleapis.com/auth/drive.readonly',
-        'https://www.googleapis.com/auth/spreadsheets.readonly',
-      ];
-      var authenticatedClient =
-          await clientViaServiceAccount(credentials, scopes);
+        var credentials = ServiceAccountCredentials.fromJson(client);
+        var scopes = <String>[
+          'https://www.googleapis.com/auth/drive.readonly',
+          'https://www.googleapis.com/auth/spreadsheets.readonly',
+        ];
+        var authenticatedClient =
+        await clientViaServiceAccount(credentials, scopes);
 
-      setState(() {
-        httpClient = authenticatedClient;
-      });
+        var historyResponse = await getHistory(
+          client: authenticatedClient,
+          url: 'https://$result',
+        );
 
-      history = await getHistory(
-        client: httpClient,
-        url: 'https://$result/',
-      );
+        await saveHistory(historyResponse);
+
+        setState(() {
+          httpClient = authenticatedClient;
+          history = historyResponse;
+          openCardInfo = true;
+        });
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('未能獲得資訊'),
+            content: Text('請稍後再試。'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('知道了'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -71,11 +93,38 @@ class _ScanState extends State<ScanScreen> {
   void closeCardInfo() {
     setState(() {
       openCardInfo = false;
+      scanned = false;
     });
+  }
+
+  Future<bool> handleBackButtonPress() {
+    if (openCardInfo) {
+      closeCardInfo();
+      return Future.value(false);
+    }
+
+    return Future.value(true);
   }
 
   CardInfo renderCardInfo() =>
       openCardInfo ? CardInfo(info: history, onClose: closeCardInfo) : null;
+
+  Widget renderCameraPreview() => scanned
+      ? Container(
+          color: primaryColor,
+          child: Center(
+            child: Icon(
+              Icons.check,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+        )
+      : QrCamera(
+          qrCodeCallback: (result) {
+            handleScannerCallback(result, context);
+          },
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -88,102 +137,93 @@ class _ScanState extends State<ScanScreen> {
           SizedBox(
             height: deviceHeight,
             width: deviceWidth,
-            child: scanned
-                ? Container(
-                    color: primaryColor,
-                    child: Center(
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                  )
-                : QrCamera(
-                    qrCodeCallback: handleScannerCallback,
-                  ),
+            child: renderCameraPreview(),
           ),
           Column(
             children: <Widget>[
               Expanded(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: scanned ? null : BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: ExactAssetImage('assets/camShadow.png'),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              scanned ? '請稍候' : '掃描暮誌銘二維碼',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                letterSpacing: 5,
-                              ),
+                  child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: scanned
+                    ? null
+                    : BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: ExactAssetImage('assets/camShadow.png'),
+                        ),
+                      ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            scanned ? '請稍候' : '掃描暮誌銘二維碼',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              letterSpacing: 5,
                             ),
-                            SizedBox(height: 350),
-                            scanned
-                                ? Container()
-                                : GestureDetector(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      width: 1,
-                                      color: Colors.white,
+                          ),
+                          SizedBox(height: 350),
+                          scanned
+                              ? Container()
+                              : GestureDetector(
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 5),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          width: 1,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '我未擁有任何暮誌銘',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                child: Text(
-                                  '我未擁有任何暮誌銘',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
+                        ],
+                      ),
+                    ),
+                    scanned
+                        ? null
+                        : Padding(
+                            padding: const EdgeInsets.all(25),
+                            child: Row(
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: openImageGallery,
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Icon(
+                                      Icons.image,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              ),
+                                )
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      scanned ? null: Padding(
-                        padding: const EdgeInsets.all(25),
-                        child: Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: openImageGallery,
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Icon(
-                                  Icons.image,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ].where(notNull).toList(),
-                  ),
-                )
-              ),
+                          ),
+                  ].where(notNull).toList(),
+                ),
+              )),
               BottomBar(activeRoute: '/scan'),
             ],
           ),
