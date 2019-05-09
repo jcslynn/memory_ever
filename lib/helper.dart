@@ -22,7 +22,8 @@ Future<History> getHistory(
   // Hardcode for demo
   int key = 0;
   if (metadata.length == 3) {
-    String clientName = metadata[2].toString();
+    String clientName = metadata[2];
+    print('clientname $clientName');
     switch (clientName) {
       case 'benchau':
         key = 3;
@@ -60,7 +61,9 @@ Future<History> getHistory(
 
 //  String hometown = values[35];
   String description = values[35];
-  String theme = values[6];
+  String theme = metadata[metadata.length - 2];
+
+  print('??? $theme');
 
   if (values[7] == '一位') {
     // values[7] specifies numbers of people

@@ -22,6 +22,7 @@ class CardInfo extends StatelessWidget {
   }
 
   String getBackgroundPath() {
+    print('theme ${info.theme}');
     switch (info.theme) {
       case '星空風格':
         return 'assets/bgSky1.png';

@@ -38,7 +38,8 @@ class _ScanState extends State<ScanScreen> {
   void handleScannerCallback(String result, BuildContext context) async {
     print(result);
 
-    if (RegExp(r'.*www.memoryever.com.*').allMatches(result).isNotEmpty && !scanned) {
+    if (RegExp(r'.*www.memoryever.com.*').allMatches(result).isNotEmpty &&
+        !scanned) {
       try {
         setState(() {
           scanned = true;
@@ -52,7 +53,7 @@ class _ScanState extends State<ScanScreen> {
           'https://www.googleapis.com/auth/spreadsheets.readonly',
         ];
         var authenticatedClient =
-        await clientViaServiceAccount(credentials, scopes);
+            await clientViaServiceAccount(credentials, scopes);
 
         var historyResponse = await getHistory(
           client: authenticatedClient,
@@ -70,17 +71,17 @@ class _ScanState extends State<ScanScreen> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: Text('未能獲得資訊'),
-            content: Text('請稍後再試。'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('知道了'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                title: Text('未能獲得資訊'),
+                content: Text('請稍後再試。'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('知道了'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
         );
       }
     }
@@ -111,13 +112,9 @@ class _ScanState extends State<ScanScreen> {
 
   Widget renderCameraPreview() => scanned
       ? Container(
-          color: primaryColor,
+          color: Colors.white,
           child: Center(
-            child: Icon(
-              Icons.check,
-              color: Colors.white,
-              size: 40,
-            ),
+            child: CircularProgressIndicator(),
           ),
         )
       : QrCamera(
@@ -165,7 +162,7 @@ class _ScanState extends State<ScanScreen> {
                           Text(
                             scanned ? '請稍候' : '掃描暮誌銘二維碼',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: scanned ? primaryColor : Colors.white,
                               fontSize: 25,
                               letterSpacing: 5,
                             ),
@@ -197,30 +194,6 @@ class _ScanState extends State<ScanScreen> {
                         ],
                       ),
                     ),
-                    scanned
-                        ? null
-                        : Padding(
-                            padding: const EdgeInsets.all(25),
-                            child: Row(
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: openImageGallery,
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Icon(
-                                      Icons.image,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
                   ].where(notNull).toList(),
                 ),
               )),
