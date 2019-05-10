@@ -35,6 +35,7 @@ dependencies:
   json_serializable:
   crypto:
   googleapis_auth:
+  googleapis: ^0.53.0
   intl:
 
 dev_dependencies:

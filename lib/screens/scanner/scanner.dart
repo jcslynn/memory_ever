@@ -36,8 +36,6 @@ class _ScanState extends State<ScanScreen> {
   }
 
   void handleScannerCallback(String result, BuildContext context) async {
-    print(result);
-
     if (RegExp(r'.*www.memoryever.com.*').allMatches(result).isNotEmpty &&
         !scanned) {
       try {
@@ -47,7 +45,7 @@ class _ScanState extends State<ScanScreen> {
 
         HapticFeedback.vibrate();
 
-        var credentials = ServiceAccountCredentials.fromJson(client);
+        var credentials = new ServiceAccountCredentials.fromJson(client);
         var scopes = <String>[
           'https://www.googleapis.com/auth/drive.readonly',
           'https://www.googleapis.com/auth/spreadsheets.readonly',

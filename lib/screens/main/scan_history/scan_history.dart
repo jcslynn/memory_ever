@@ -58,6 +58,41 @@ class _ScanHistoryState extends State<ScanHistory> {
     Navigator.of(context).pushReplacementNamed('/scan');
   }
 
+  String getBackgroundPath(history) {
+    print('scan history url ${history.url}');
+    print('scan history description ${history.description}');
+    print('scan history people length ${history.people.length}');
+    print('scan history theme ${history.theme}');
+    switch (history.theme) {
+      case 'sky':
+        return 'assets/bgSky1.png';
+      case '星空風格':
+        return 'assets/bgSky1.png';
+      case 'sky2':
+        return 'assets/bgSky2.png';
+      case '藍天風格':
+        return 'assets/bgSky2.png';
+      case 'sea':
+        return 'assets/bgSea.png';
+      case '晨海風格':
+        return 'assets/bgSea.png';
+      case 'deepsea':
+        return 'assets/bgDeepSea.png';
+      case '深海風格':
+        return 'assets/bgDeepSea.png';
+      case 'flower':
+        return 'assets/bgFlower.png';
+      case '花田風格':
+        return 'assets/bgFlower.png';
+      case 'story':
+        return 'assets/bgStory.png';
+      case '童話風格':
+        return 'assets/bgStory.png';
+      default:
+        return 'assets/bgSky2.png';
+    }
+  }
+
   List<Builder> renderCards() => histories
       .map((history) => Builder(
             builder: (context) => GestureDetector(
@@ -73,7 +108,7 @@ class _ScanHistoryState extends State<ScanHistory> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: ExactAssetImage('assets/bgSky2.png'),
+                          image: ExactAssetImage(getBackgroundPath(history)),
                         ),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [

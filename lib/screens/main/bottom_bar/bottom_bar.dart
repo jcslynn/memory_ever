@@ -13,8 +13,6 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('route $activeRoute');
-
     return Container(
       color: Color(0xCCFFFFFF),
       padding: EdgeInsets.symmetric(vertical: 5),

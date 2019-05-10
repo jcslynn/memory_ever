@@ -24,69 +24,87 @@ class CardInfo extends StatelessWidget {
   String getBackgroundPath() {
     print('theme ${info.theme}');
     switch (info.theme) {
+      case 'sky':
+        return 'assets/bgSky1.png';
       case '星空風格':
         return 'assets/bgSky1.png';
+      case 'sky2':
+        return 'assets/bgSky2.png';
       case '藍天風格':
         return 'assets/bgSky2.png';
+      case 'sea':
+        return 'assets/bgSea.png';
       case '晨海風格':
         return 'assets/bgSea.png';
+      case 'deepsea':
+        return 'assets/bgDeepSea.png';
       case '深海風格':
         return 'assets/bgDeepSea.png';
+      case 'flower':
+        return 'assets/bgFlower.png';
       case '花田風格':
         return 'assets/bgFlower.png';
+      case 'story':
+        return 'assets/bgStory.png';
       case '童話風格':
         return 'assets/bgStory.png';
       default:
-        return '';
+        return 'assets/bgSky2.png';
     }
   }
 
-  Column renderPerson(Person person) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            height: 240,
-            width: 180,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-                width: 5,
-              ),
-            ),
-            child: Image.memory(
-              base64Decode(person.imageBase64),
-              semanticLabel: '${person.name} 的遺照',
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            child: Text(
-              person.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                letterSpacing: 5,
-              ),
+  Column renderPerson(Person person) {
+    print('person.name ${person.name}');
+    print('person.image ${person.imageBase64}');
+    print('person.age ${person.age}');
+    print('person.hometown ${person.hometown}');
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          height: 240,
+          width: 180,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.white,
+              width: 5,
             ),
           ),
-          Text(
-            person.hometown,
+          child: Image.memory(
+            base64Decode(person.imageBase64),
+            semanticLabel: '${person.name} 的遺照',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          child: Text(
+            person.name,
             style: TextStyle(
-              fontSize: 15,
-              letterSpacing: 3,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              letterSpacing: 5,
             ),
           ),
-          Text(
-            person.age.toString(),
-            style: TextStyle(
-              fontSize: 15,
-              letterSpacing: 3,
-            ),
+        ),
+        Text(
+          person.hometown,
+          style: TextStyle(
+            fontSize: 15,
+            letterSpacing: 3,
           ),
-        ],
-      );
+        ),
+        Text(
+          person.age.toString(),
+          style: TextStyle(
+            fontSize: 15,
+            letterSpacing: 3,
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
