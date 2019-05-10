@@ -1,4 +1,4 @@
-package com.example.memory_ever;
+package com.vibe.memory_ever;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
