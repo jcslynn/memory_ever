@@ -4,6 +4,7 @@ import 'package:memory_ever/screens/splash.dart';
 import 'package:memory_ever/screens/intro.dart';
 import 'package:memory_ever/screens/main/scan_history/scan_history.dart';
 import 'package:memory_ever/screens/scanner/scanner.dart';
+import 'package:memory_ever/screens/webview.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/intro4': (BuildContext context) => IntroPage(4),
         '/scan': (BuildContext context) => ScanScreen(),
         '/history': (_) => ScanHistory(),
+        '/webview': (BuildContext context) => WebViewScreen(),
       }
     );
   }

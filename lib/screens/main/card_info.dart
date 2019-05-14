@@ -3,6 +3,7 @@ import 'dart:convert' show base64Decode;
 import 'package:flutter/material.dart';
 import 'package:memory_ever/classes/person/person.dart';
 import 'package:memory_ever/classes/history/history.dart';
+import 'package:memory_ever/screens/webview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CardInfo extends StatelessWidget {
@@ -12,8 +13,9 @@ class CardInfo extends StatelessWidget {
 
   final Function onClose;
 
-  void openUrl() {
-    launch(info.url);
+  void openUrl(context) {
+//    launch(info.url);
+    Navigator.pushNamed(context, '/webview', arguments: info);
   }
 
   Future<bool> handleBackButtonPress() {
@@ -167,7 +169,7 @@ class CardInfo extends StatelessWidget {
                 ),
                 SizedBox(height: 25),
                 GestureDetector(
-                  onTap: openUrl,
+                  onTap: () => openUrl(context),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,

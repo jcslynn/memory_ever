@@ -27,4 +27,6 @@ class History {
   String getTrimmedDescription() => description.length > 40
       ? '${description.substring(0, 40)}...'
       : description;
+
+  String getName() => people.length == 1 ? people[0].name : people[0].name + ' & ' + people[1].name;
 }

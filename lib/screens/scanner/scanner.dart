@@ -87,6 +87,7 @@ class _ScanState extends State<ScanScreen> {
           openCardInfo = true;
         });
       } catch (e) {
+        print('Memory Ever Error: ${e.toString()}');
         showDialog(
           context: context,
           builder: (_) =>
@@ -98,6 +99,7 @@ class _ScanState extends State<ScanScreen> {
                     child: Text('知道了'),
                     onPressed: () {
                       Navigator.of(context).pop();
+                      closeCardInfo();
                     },
                   ),
                 ],
